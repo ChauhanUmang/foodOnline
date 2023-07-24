@@ -23,6 +23,7 @@ class UserManager(BaseUserManager):
         # set password method is used to save a password in encrypted form
         user.set_password(password)
         user.save(using=self._db)
+        print("user is created in user manager class.")
         return user
 
     def create_superuser(self, first_name, last_name, username, email, password=None):

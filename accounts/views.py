@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from accounts.forms import UserForm
 from accounts.models import User
+from django.contrib import messages
 
 
 # Create your views here.
@@ -33,6 +34,7 @@ def register_user(request):
             # we are updating one value i.e. role here for that user and saving it again in db.
             # this is creating an extra db hit.
             print("User is created.")
+            messages.success(request, 'Your account has been registered successfully.')
             return redirect('register_user')
         else:
             print("invalid form")

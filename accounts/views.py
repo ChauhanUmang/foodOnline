@@ -2,13 +2,17 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from accounts.forms import UserForm
 from accounts.models import User, UserProfile
-from django.contrib import messages
+from django.contrib import messages, auth
+
 from vendor.forms import VendorForm
 
 
 # Create your views here.
 def register_user(request):
-    if request.method == "POST":
+    if request.user.is_authenticated:
+        messages.warning(request, "You are already logged in.")
+        return redirect('dashboard')
+    elif request.method == "POST":
         print(request.POST)
         form = UserForm(request.POST)
         if form.is_valid():
@@ -49,7 +53,10 @@ def register_user(request):
 
 
 def register_vendor(request):
-    if request.method == "POST":
+    if request.user.is_authenticated:
+        messages.warning(request, "You are already logged in.")
+        return redirect('dashboard')
+    elif request.method == "POST":
         # store the data and create the vendor
         form = UserForm(request.POST)
         v_form = VendorForm(request.POST, request.FILES)
@@ -81,3 +88,37 @@ def register_vendor(request):
         'v_form': v_form
     }
     return render(request, 'accounts/registerVendor.html', context)
+
+
+def login(request):
+    if request.user.is_authenticated:
+        messages.warning(request, "You are already logged in.")
+        return redirect('dashboard')
+    # first we will check if the request is post
+    elif request.method == "POST":
+        # Get email and password from the form using name of the html tags
+        email = request.POST['email']
+        password = request.POST['password']
+
+        # check if the email and password belongs to any user
+        # we will use inbuilt authenticate method to do this.
+        user = auth.authenticate(email=email, password=password)
+        if user is not None:
+            auth.login(request, user)
+            messages.success(request, "You are now logged in.")
+            return redirect('dashboard')
+        else:
+            messages.error(request, "Invalid login credentials.")
+            return redirect('login')
+    return render(request, 'accounts/login.html')
+
+
+def logout(request):
+    auth.logout(request)
+    messages.info(request, 'You are logged out.')
+    return redirect("login")
+
+
+def dashboard(request):
+    return render(request, 'accounts/dashboard.html')
+

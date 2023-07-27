@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from accounts.forms import UserForm
 from accounts.models import User, UserProfile
 from django.contrib import messages, auth
-from accounts.utils import detect_user
+from accounts.utils import detect_user, send_verification_mail
 from vendor.forms import VendorForm
 
 
@@ -56,6 +56,9 @@ def register_user(request):
             # this could be improved. as create_user already saved the user in db and returned that user
             # we are updating one value i.e. role here for that user and saving it again in db.
             # this is creating an extra db hit.
+
+            # Send verification mail
+            send_verification_mail(request, user)
             print("User is created.")
             messages.success(request, 'Your account has been registered successfully.')
             return redirect('register_user')
@@ -93,6 +96,9 @@ def register_vendor(request):
             user_profile = UserProfile.objects.get(user=user)
             vendor.user_profile = user_profile
             vendor.save()
+
+            # Send verification mail
+            send_verification_mail(request, user)
             messages.success(request, 'Your account has been registered successfully. Please wait for approval.')
             return redirect('register_vendor')
         else:
@@ -154,3 +160,8 @@ def cust_dashboard(request):
 @user_passes_test(check_role_vendor)
 def vendor_dashboard(request):
     return render(request, 'accounts/vendor_dashboard.html')
+
+
+def activate(request, uidb64, token):
+    # activate the user by setting the is_active to true
+    return

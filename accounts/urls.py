@@ -11,4 +11,7 @@ urlpatterns = [
     path('myAccount/', views.my_account, name='myAccount'),
     path('custDashboard/', views.cust_dashboard, name='custDashboard'),
     path('vendorDashboard/', views.vendor_dashboard, name='vendorDashboard'),
+
+    # Activate user
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
 ]

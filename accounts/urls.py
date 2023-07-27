@@ -8,5 +8,7 @@ urlpatterns = [
     # Login and Logout pages
     path('login/', views.login, name="login"),
     path('logout/', views.logout, name='logout'),
-    path('dashboard/', views.dashboard, name='dashboard'),
+    path('myAccount/', views.my_account, name='myAccount'),
+    path('custDashboard/', views.cust_dashboard, name='custDashboard'),
+    path('vendorDashboard/', views.vendor_dashboard, name='vendorDashboard'),
 ]

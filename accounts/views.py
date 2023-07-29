@@ -61,11 +61,12 @@ def register_user(request):
             # this is creating an extra db hit.
 
             # Send verification mail
-            mail_subject = 'Email Verification for FoodOnline',
-            mail_template = 'accounts/email/account_verification_email.html'
-            send_mail(request, user, mail_subject, mail_template)
+            mail_subject = 'Email Verification for FoodOnline'
+            email_template = 'accounts/email/account_verification_email.html'
+            send_mail(request, user, mail_subject, email_template)
             print("User is created.")
-            messages.success(request, 'Your account has been registered successfully.')
+            messages.success(request, 'Your account has been registered successfully. Please verify the email to '
+                                      'activate the account.')
             return redirect('register_user')
         else:
             print("invalid form")
@@ -103,10 +104,11 @@ def register_vendor(request):
             vendor.save()
 
             # Send verification mail
-            mail_subject = 'Email Verification for FoodOnline',
-            mail_template = 'accounts/email/account_verification_email.html'
-            send_mail(request, user, mail_subject, mail_template)
-            messages.success(request, 'Your account has been registered successfully. Please wait for approval.')
+            mail_subject = 'Email Verification for FoodOnline'
+            email_template = 'accounts/email/account_verification_email.html'
+            send_mail(request, user, mail_subject, email_template)
+            messages.success(request, 'Your account has been registered successfully. Please verify the email to '
+                                      'activate the account.')
             return redirect('register_vendor')
         else:
             print('invalid forms')

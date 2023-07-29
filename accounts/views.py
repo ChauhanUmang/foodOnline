@@ -1,11 +1,14 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.utils.http import urlsafe_base64_decode
+
 from accounts.forms import UserForm
 from accounts.models import User, UserProfile
 from django.contrib import messages, auth
-from accounts.utils import detect_user
+from accounts.utils import detect_user, send_mail
 from vendor.forms import VendorForm
 
 
@@ -56,6 +59,11 @@ def register_user(request):
             # this could be improved. as create_user already saved the user in db and returned that user
             # we are updating one value i.e. role here for that user and saving it again in db.
             # this is creating an extra db hit.
+
+            # Send verification mail
+            mail_subject = 'Email Verification for FoodOnline',
+            mail_template = 'accounts/email/account_verification_email.html'
+            send_mail(request, user, mail_subject, mail_template)
             print("User is created.")
             messages.success(request, 'Your account has been registered successfully.')
             return redirect('register_user')
@@ -93,6 +101,11 @@ def register_vendor(request):
             user_profile = UserProfile.objects.get(user=user)
             vendor.user_profile = user_profile
             vendor.save()
+
+            # Send verification mail
+            mail_subject = 'Email Verification for FoodOnline',
+            mail_template = 'accounts/email/account_verification_email.html'
+            send_mail(request, user, mail_subject, mail_template)
             messages.success(request, 'Your account has been registered successfully. Please wait for approval.')
             return redirect('register_vendor')
         else:
@@ -154,3 +167,78 @@ def cust_dashboard(request):
 @user_passes_test(check_role_vendor)
 def vendor_dashboard(request):
     return render(request, 'accounts/vendor_dashboard.html')
+
+
+def activate(request, uidb64, token):
+    # activate the user by setting the is_active to true
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(request, "Congratulations! Your account is activated.")
+        return redirect('myAccount')
+    else:
+        messages.error(request, "Invalid activation link.")
+        return redirect('myAccount')
+
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email__exact=email)
+
+            # send reset password email
+            mail_subject = 'Reset Password for FoodOnline'
+            email_template = 'accounts/email/reset_password_email.html'
+            send_mail(request, user, mail_subject, email_template)
+            messages.success(request, "Password reset link has been sent to your email address.")
+            return redirect('login')
+        else:
+            messages.error(request, "Your search did not return any results. Please try again with other information.")
+            return redirect('forgot_password')
+    return render(request, 'accounts/forgot_password.html')
+
+
+def reset_password_validate(request, uidb64, token):
+    # validate the user by decoding the token and user primary key
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        request.session['uid'] = uid
+        # messages.info(request, "Please reset your password.")
+        return redirect('reset_password')
+    else:
+        messages.error(request, 'This link has been expired.')
+        return redirect('myAccount')
+
+
+# As of now, I can directly open the reset_password URL in browser. That should not be the case.
+def reset_password(request):
+    if request.method == "POST":
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+
+        if password == confirm_password:
+            pk = request.session.get('uid')
+            user = User.objects.get(pk=pk)
+            user.set_password(password)
+            user.is_active = True
+            user.save()
+            messages.success(request, 'Password updated successfully.')
+            return redirect('login')
+        else:
+            messages.error(request, 'Passwords do not match.')
+            return redirect('reset_password')
+    return render(request, 'accounts/reset_password.html')
+

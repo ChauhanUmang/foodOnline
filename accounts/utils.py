@@ -18,11 +18,10 @@ def detect_user(user):
     return redirect_url
 
 
-def send_verification_mail(request, user):
+def send_mail(request, user, mail_subject, email_template):
     from_email = settings.DEFAULT_FROM_EMAIL
     current_site = get_current_site(request)
-    mail_subject = 'Email Verification for FoodOnline'
-    message = render_to_string('accounts/email/account_verification_email.html',
+    message = render_to_string(email_template,
                                {
                                    'user': user,
                                    'domain': current_site,

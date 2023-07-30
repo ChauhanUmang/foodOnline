@@ -10,6 +10,7 @@ from accounts.models import User, UserProfile
 from django.contrib import messages, auth
 from accounts.utils import detect_user, send_mail
 from vendor.forms import VendorForm
+from vendor.models import Vendor
 
 
 # Create Decorator to restrict vendor from accessing customer page

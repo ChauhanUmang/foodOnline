@@ -1,8 +1,8 @@
 from django.urls import path
 from vendor import views
-from accounts import views as AccountViews
+from accounts import views as account_views
 
 urlpatterns = [
-    path('', AccountViews.vendor_dashboard, name='vendor'),
+    path('', account_views.vendor_dashboard, name='vendor'),
     path('profile/', views.profile, name='vendor_profile'),
 ]

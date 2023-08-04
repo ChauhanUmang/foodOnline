@@ -22,26 +22,33 @@
                         <div class="user-holder">
                             <h5 class="text-uppercase">Build Your Food Menu</h5>
 							<hr>
-                            <h6>Menu Categories</h6>
+                            <h6>
+                                Category:
+                                <span class="text-uppercase text-success">
+                                    {{ category.category_name }}
+                                </span>
+                            </h6>
+                            {% if products %}
                             <a href="#" class="btn btn-success float-right m-1">
                                 <i class="icon-plus custom-icon"></i>
                                 Add Food
                             </a>
-                            <a href="#" class="btn btn-info float-right m-1">
-                                <i class="icon-plus custom-icon"></i>
-                                Add Category
-                            </a>
+
+
                             <table class="table table-hover table-borderless">
                                 <tbody>
-                                {% for cat in categories %}
+                                {% for item in products %}
                                     <tr>
                                         <td class="text-left">{{ forloop.counter }}</td>
                                         <td class="text-left">
-                                            <a href="{% url 'products_by_category' cat.id %}">
+                                            <img src="{{ item.image.url }}" alt="Product Image" width="40">
+                                        </td>
+                                        <td class="text-left">
+                                            <a href="">
                                                 <p class="mb-0 font-weight-bold">
-                                                    {{ cat.category_name }}
+                                                    {{ item.product_title }}
                                                 </p>
-                                                <small class="text-muted">{{ cat.description }}</small>
+                                                <small class="text-muted">{{ item.description }}</small>
                                             </a>
                                         </td>
                                         <td>
@@ -52,6 +59,17 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
+                            {% else %}
+                            <div style="height: 180px; padding: 55px;">
+                                <h5 class="text-center">No items found.</h5>
+                                <div class="text-center">
+                                    <a href="#" class="btn btn-success">
+                                        <i class="icon-plus custom-icon"></i>
+                                        Add Item
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -13,3 +13,22 @@
     animation-duration: 8s;
     z-index: 99;
 }
+
+.btn{
+    padding: 5px 1.75em;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.custom-icon{
+    min-width: 14px;
+    display: inline-block;
+    margin-right: 5px;
+    color: #fff;
+    font-size: 14px;
+    vertical-align: middle;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    line-height: 13px;
+}

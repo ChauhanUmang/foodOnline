@@ -1,7 +1,6 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.http import urlsafe_base64_decode
 
@@ -10,7 +9,6 @@ from accounts.models import User, UserProfile
 from django.contrib import messages, auth
 from accounts.utils import detect_user, send_mail
 from vendor.forms import VendorForm
-from vendor.models import Vendor
 
 
 # Create Decorator to restrict vendor from accessing customer page

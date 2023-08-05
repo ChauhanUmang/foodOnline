@@ -22,36 +22,35 @@
                         <div class="user-holder">
                             <h5 class="text-uppercase">Build Your Food Menu</h5>
 							<hr>
-                            <h6>Menu Categories</h6>
-                            <a href="#" class="btn btn-success float-right m-1">
-                                <i class="icon-plus custom-icon"></i>
-                                Add Food
-                            </a>
-                            <a href="#" class="btn btn-info float-right m-1">
-                                <i class="icon-plus custom-icon"></i>
-                                Add Category
-                            </a>
-                            <table class="table table-hover table-borderless">
-                                <tbody>
-                                {% for cat in categories %}
-                                    <tr>
-                                        <td class="text-left">{{ forloop.counter }}</td>
-                                        <td class="text-left">
-                                            <a href="{% url 'products_by_category' cat.id %}">
-                                                <p class="mb-0 font-weight-bold">
-                                                    {{ cat.category_name }}
-                                                </p>
-                                                <small class="text-muted">{{ cat.description }}</small>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <i class="icon-pencil custom-icon" style="color: #515151 !important;"></i> &nbsp;
-                                            <i class="icon-trash custom-icon" style="color: #c33332 !important;"></i>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                            <h6>Add New Category</h6>
+
+                            <!-- render form-->
+                            <form action="{% url 'add_category' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-fields-set">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                            <div class="field-holder">
+                                                <label>Category Name *</label>
+                                                {{ form.category_name }}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                            <div class="field-holder">
+                                                <label>Description</label>
+                                                {{ form.description }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-info">
+                                    <i class="icon-plus custom-icon"></i>
+                                    Create
+                                </button>
+
+                            </form>
                         </div>
                     </div>
                 </div>

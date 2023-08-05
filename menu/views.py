@@ -1,6 +1,9 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.template.defaultfilters import slugify
 from accounts.views import check_role_vendor
+from menu.forms import CategoryForm
 from menu.models import Category, Product
 from vendor.utils import get_vendor
 
@@ -30,4 +33,20 @@ def products_by_category(request, pk=None):
 
 
 def add_category(request):
-    return render(request, 'menu/category/add_category.html')
+    if request.method == "POST":
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category = form.save(commit=False)
+            print(category.category_name)
+            # Before finally saving the form, we need to get vendor and slug details
+            category.vendor = get_vendor(request)
+            category.slug = slugify(category.category_name)
+            form.save()
+            messages.success(request, "Category created successfully!")
+            return redirect('menu_builder')
+    else:
+        form = CategoryForm
+    context = {
+        'form': form,
+    }
+    return render(request, 'menu/category/add.html', context)

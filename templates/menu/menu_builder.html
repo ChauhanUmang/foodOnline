@@ -45,8 +45,14 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <i class="icon-pencil custom-icon" style="color: #515151 !important;"></i> &nbsp;
-                                            <i class="icon-trash custom-icon" style="color: #c33332 !important;"></i>
+                                            <a href="{% url 'edit_category' cat.id %}">
+                                                <i class="icon-pencil custom-icon" style="color: #515151 !important;"></i>
+                                            </a>
+                                            &nbsp;
+                                            <a href="{% url 'delete_category' cat.id %}"
+                                               onclick="return confirm('Are you sure you want to delete this category?')">
+                                                <i class="icon-trash custom-icon" style="color: #c33332 !important;"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 {% endfor %}

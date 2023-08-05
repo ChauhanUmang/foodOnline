@@ -59,7 +59,6 @@ def edit_category(request, category_id=None):
     category = get_object_or_404(Category, pk=category_id)
     if request.method == "POST":
         form = CategoryForm(request.POST, instance=category)
-        print(f"form is {form}")
         if form.is_valid():
             category = form.save(commit=False)
             # Before finally saving the form, we need to get vendor and slug details
@@ -114,10 +113,31 @@ def add_product(request, category_id=None):
 @login_required(login_url='login')
 @user_passes_test(check_role_vendor)
 def edit_product(request, product_id):
-    render(request, 'menu/product/edit.html')
+    product = get_object_or_404(Product, pk=product_id)
+    if request.method == "POST":
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            product = form.save(commit=False)
+            # Before finally saving the form, we need to get vendor and slug details
+            product.vendor = get_vendor(request)
+            product.slug = slugify(product.product_title)
+            form.save()
+            messages.success(request, "Product updated successfully!")
+            return redirect('products_by_category', product.category.id)
+    else:
+        form = ProductForm(instance=product)
+    context = {
+        'form': form,
+        'product': product,
+    }
+    return render(request, 'menu/product/edit.html', context)
 
 
 @login_required(login_url='login')
 @user_passes_test(check_role_vendor)
 def delete_product(request, product_id):
-    pass
+    product = get_object_or_404(Product, pk=product_id)
+    category_id = product.category.id
+    product.delete()
+    messages.success(request, 'Product has been deleted successfully!')
+    return redirect('products_by_category', category_id)

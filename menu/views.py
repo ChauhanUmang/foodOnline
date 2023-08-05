@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.defaultfilters import slugify
 from accounts.views import check_role_vendor
-from menu.forms import CategoryForm
+from menu.forms import CategoryForm, ProductForm
 from menu.models import Category, Product
 from vendor.utils import get_vendor
 
@@ -84,3 +84,40 @@ def delete_category(request, category_id=None):
     category.delete()
     messages.success(request, 'Category has been deleted successfully!')
     return redirect('menu_builder')
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def add_product(request, category_id=None):
+    if request.method == "POST":
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            # Before finally saving the form, we need to get vendor and slug details
+            product.vendor = get_vendor(request)
+            product.slug = slugify(product.product_title)
+            form.save()
+            messages.success(request, "Product created successfully!")
+            return redirect('products_by_category', product.category.id)
+    else:
+        if category_id:
+            category = get_object_or_404(Category, pk=category_id)
+            form = ProductForm(initial={'category': category})
+        else:
+            form = ProductForm
+    context = {
+        'form': form,
+    }
+    return render(request, 'menu/product/add.html', context)
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def edit_product(request, product_id):
+    render(request, 'menu/product/edit.html')
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def delete_product(request, product_id):
+    pass

@@ -34,7 +34,7 @@
                                 </span>
                             </h6>
                             {% if products %}
-                            <a href="#" class="btn btn-success float-right m-1">
+                            <a href="{% url 'add_product_for_category' category.id %}" class="btn btn-success float-right m-1">
                                 <i class="icon-plus custom-icon"></i>
                                 Add Food
                             </a>

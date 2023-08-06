@@ -103,7 +103,11 @@ def add_product(request, category_id=None):
             category = get_object_or_404(Category, pk=category_id)
             form = ProductForm(initial={'category': category})
         else:
-            form = ProductForm
+            form = ProductForm()
+
+        # Modify form field here so that it contains categories of active vendor only.
+        form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
+
     context = {
         'form': form,
     }
@@ -126,6 +130,10 @@ def edit_product(request, product_id):
             return redirect('products_by_category', product.category.id)
     else:
         form = ProductForm(instance=product)
+
+        # Modify form field here so that it contains categories of active vendor only.
+        form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
+
     context = {
         'form': form,
         'product': product,

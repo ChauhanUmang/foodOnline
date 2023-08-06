@@ -36,7 +36,11 @@
 																		<li class="gal-img">
 																			<div class="drag-list">
 																				<div class="item-thumb">
-																					<img class="thumbnail" src="{{ vendor.user_profile.profile_picture.url }}" alt="">
+																					{% if vendor.user_profile.profile_picture %}
+																					<img class="thumbnail" src="{{ vendor.user_profile.profile_picture.url }}" alt="Profile Picture">
+																					{% else %}
+																					<img class="thumbnail" src="{% static 'images/default_profile.jpg' %}" alt="Profile Picture">
+																					{% endif %}
 																				</div>
 																			</div>
 																		</li>
@@ -58,7 +62,11 @@
 																		<li class="gal-img">
 																			<div class="drag-list">
 																				<div class="item-thumb">
-																					<img class="thumbnail" src="{{ vendor.user_profile.cover_photo.url }}" alt="">
+																					{% if vendor.user_profile.cover_photo %}
+																					<img class="thumbnail" src="{{ vendor.user_profile.cover_photo.url }}" alt="Cover Photo">
+																					{% else %}
+																					<img class="thumbnail" src="{% static 'images/default_cover.jpg' %}" alt="Cover Photo">
+																					{% endif %}
 																				</div>
 																			</div>
 																		</li>
@@ -80,7 +88,7 @@
 																		<li class="gal-img">
 																			<div class="drag-list">
 																				<div class="item-thumb">
-																					<img class="thumbnail" src="{{ vendor.vendor_license.url }}" alt="">
+																					<img class="thumbnail" src="{{ vendor.vendor_license.url }}" alt="License">
 																				</div>
 																			</div>
 																		</li>

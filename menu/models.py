@@ -30,7 +30,10 @@ class Category(models.Model):
 
 class Product(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    # If we are using category to fetch all the products related to a category
+    # We already have a foreign key relationship with Category model
+    # but we also need to provide the related_name which is the model name of this model
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='product')
     product_title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(max_length=250, blank=True)

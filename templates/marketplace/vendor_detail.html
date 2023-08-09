@@ -132,11 +132,16 @@
                                                 </div>
                                                 <div class="price-holder">
                                                     <span class="price">£{{ item.price }}</span>
-                                                    <a href="#" class="restaurant-add-menu-btn">
+                                                    <a href="#" class="add_to_cart" data-id="{{ item.id }}"
+                                                       data-url="{% url 'add_to_cart' item.id %}">
                                                         <i class="icon-plus4 text-color">
                                                         </i>
                                                     </a>
-                                                    <span id="add-menu-loader-10"></span>
+                                                    <label id="qty" style="padding-left: 14px;">0</label>
+                                                    <a href="#" class="remove_from_cart">
+                                                        <i class="icon-minus text-color" style="margin-left: 14px;">
+                                                        </i>
+                                                    </a>
                                                 </div>
                                             </li>
                                             {% endfor %}

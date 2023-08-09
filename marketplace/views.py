@@ -1,5 +1,8 @@
 from django.db.models import Prefetch
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
+
+from marketplace.models import Cart
 from menu.models import Category, Product
 from vendor.models import Vendor
 
@@ -28,3 +31,26 @@ def vendor_detail(request, vendor_slug):
     }
     return render(request, 'marketplace/vendor_detail.html', context)
 
+
+def add_to_cart(request, product_id):
+    if request.user.is_authenticated:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            # Check if the product exists
+            try:
+                prod = Product.objects.get(id=product_id)
+                # Check if the user has already added product in the cart
+                try:
+                    chkCart = Cart.objects.get(user=request.user, products=prod)
+                    # Increase the cart quantity
+                    chkCart.quantity += 1
+                    chkCart.save()
+                    return JsonResponse({'status': 'Success', 'message': 'Product increased in cart.'})
+                except:
+                    chkCart = Cart.objects.create(user=request.user, products=prod, quantity=1)
+                    return JsonResponse({'status': 'Success', 'message': 'Product added to the cart.'})
+            except:
+                return JsonResponse({'status': 'Failed', 'message': 'This product does not exist.'})
+        else:
+            return JsonResponse({'status': 'Failed', 'message': 'Invalid request.'})
+    else:
+        return JsonResponse({'status': 'Failed', 'message': 'Please login to continue.'})

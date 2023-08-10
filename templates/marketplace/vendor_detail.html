@@ -138,7 +138,8 @@
                                                         </i>
                                                     </a>
                                                     <label id="qty-{{ item.id }}" style="padding-left: 14px;">0</label>
-                                                    <a href="#" class="remove_from_cart">
+                                                    <a href="#" class="remove_from_cart" data-id="{{ item.id }}"
+                                                        data-url="{% url 'remove_from_cart' item.id %}">
                                                         <i class="icon-minus text-color" style="margin-left: 14px;">
                                                         </i>
                                                     </a>

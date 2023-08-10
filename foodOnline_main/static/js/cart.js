@@ -4,22 +4,43 @@ $(document).ready(function(){
 
         prod_id = $(this).attr('data-id');
         url = $(this).attr('data-url');
-        data = {
-            product_id: prod_id,
-        }
 
         $.ajax({
             type: 'GET',
             url: url,
-            data: data,
             success: function(response){
-                console.log(response.cart_counter["cart_count"]);
-                $('#cart_counter').html(response.cart_counter["cart_count"]);
-                $('#qty-'+prod_id).html(response.qty);
+                if(response.status == 'Failed'){
+                    console.log(response)
+                }
+                else{
+                    $('#cart_counter').html(response.cart_counter["cart_count"]);
+                    $('#qty-'+prod_id).html(response.qty);
+                }
             }
         })
     })
 
+    $('.remove_from_cart').on('click', function(e){
+        e.preventDefault();
+
+        prod_id = $(this).attr('data-id');
+        url = $(this).attr('data-url');
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function(response){
+                if(response.status == 'Failed')
+                {
+                    console.log(response)
+                }
+                else{
+                    $('#cart_counter').html(response.cart_counter["cart_count"]);
+                    $('#qty-'+prod_id).html(response.qty);
+                }
+            }
+        })
+    })
 
     //Place the cart item quantity on load
     $('.item_qty').each(function(){

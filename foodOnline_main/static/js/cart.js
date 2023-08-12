@@ -9,8 +9,17 @@ $(document).ready(function(){
             type: 'GET',
             url: url,
             success: function(response){
+                if(response.status == 'login_required'){
+                    Swal.fire(response.message).then(function(){
+                        window.location = '/login';
+                    })
+                }
                 if(response.status == 'Failed'){
-                    console.log(response)
+                    Swal.fire({
+                      icon: 'error',
+                      title: response.message
+                    })
+                    //console.log(response)
                 }
                 else{
                     $('#cart_counter').html(response.cart_counter["cart_count"]);
@@ -30,9 +39,17 @@ $(document).ready(function(){
             type: 'GET',
             url: url,
             success: function(response){
+                if(response.status == 'login_required'){
+                    Swal.fire(response.message).then(function(){
+                        window.location = '/login';
+                    })
+                }
                 if(response.status == 'Failed')
                 {
-                    console.log(response)
+                    Swal.fire({
+                      icon: 'error',
+                      title: response.message
+                    })
                 }
                 else{
                     $('#cart_counter').html(response.cart_counter["cart_count"]);

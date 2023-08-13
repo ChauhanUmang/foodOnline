@@ -37,15 +37,18 @@ def products_by_category(request, pk=None):
 def add_category(request):
     if request.method == "POST":
         form = CategoryForm(request.POST)
-        if form.is_valid():
-            category_name = form.cleaned_data['category_name']
-            category = form.save(commit=False)
-            # Before finally saving the form, we need to get vendor and slug details
-            category.vendor = get_vendor(request)
-            category.slug = slugify(category_name)+'-'+str(category.vendor.id)
-            form.save()
-            messages.success(request, "Category created successfully!")
-            return redirect('menu_builder')
+        try:
+            if form.is_valid():
+                category_name = form.cleaned_data['category_name']
+                category = form.save(commit=False)
+                # Before finally saving the form, we need to get vendor and slug details
+                category.vendor = get_vendor(request)
+                category.slug = slugify(category_name)+'-'+str(category.vendor.id)
+                form.save()
+                messages.success(request, "Category created successfully!")
+                return redirect('menu_builder')
+        except:
+            messages.error(request, "Category with same name already exists.")
     else:
         form = CategoryForm
     context = {
@@ -60,14 +63,17 @@ def edit_category(request, category_id=None):
     category = get_object_or_404(Category, pk=category_id)
     if request.method == "POST":
         form = CategoryForm(request.POST, instance=category)
-        if form.is_valid():
-            category = form.save(commit=False)
-            # Before finally saving the form, we need to get vendor and slug details
-            category.vendor = get_vendor(request)
-            category.slug = slugify(category.category_name)+'-'+str(category.vendor.id)
-            form.save()
-            messages.success(request, "Category updated successfully!")
-            return redirect('menu_builder')
+        try:
+            if form.is_valid():
+                category = form.save(commit=False)
+                # Before finally saving the form, we need to get vendor and slug details
+                category.vendor = get_vendor(request)
+                category.slug = slugify(category.category_name)+'-'+str(category.vendor.id)
+                form.save()
+                messages.success(request, "Category updated successfully!")
+                return redirect('menu_builder')
+        except:
+            messages.error(request, "Category with same name already exists.")
     else:
         form = CategoryForm(instance=category)
     context = {

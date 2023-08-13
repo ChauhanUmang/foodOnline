@@ -1,7 +1,6 @@
 from django.db.models import Prefetch
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
-
 from marketplace.context_processors import get_cart_counter
 from marketplace.models import Cart
 from menu.models import Category, Product
@@ -103,3 +102,11 @@ def remove_from_cart(request, product_id):
             return JsonResponse({'status': 'Failed', 'message': 'Invalid request.'})
     else:
         return JsonResponse({'status': 'login_required', 'message': 'Please login to continue.'})
+
+
+def cart(request):
+    cart_items = Cart.objects.filter(user=request.user)
+    context = {
+        'cart_items': cart_items,
+    }
+    return render(request, 'marketplace/cart.html', context)

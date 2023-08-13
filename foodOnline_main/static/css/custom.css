@@ -107,4 +107,44 @@ h4, h4 a {
 	text-transform: none;
 }
 
+.empty-cart-img{
+    width: 271px;
+    height: 256px;
+    background-image: url('/static/extra-images/empty_cart.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0 auto;
+}
+
+._3Y9ZP{
+    margin-top: 24px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #535665;
+    padding-left: 50px;
+}
+
+.d7jCU {
+    margin-top: 8px;
+    color: #7e808c;
+}
+
+._3pgCg {
+    display: block;
+    margin-top: 30px;
+    padding: 11px 20px;
+    text-transform: uppercase;
+    background-color: #c33332;
+    color: #fff !important;
+    font-weight: 600;
+    cursor: pointer;
+    border: 0;
+    font-size: 15px;
+    text-align: center;
+}
+
+#cart-content > div > a:hover{
+    text-decoration: none;
+}
+
 

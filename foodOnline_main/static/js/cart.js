@@ -1,10 +1,5 @@
 $(document).ready(function(){
-    $('.add_to_cart').on('click', function(e){
-        e.preventDefault();
-
-        prod_id = $(this).attr('data-id');
-        url = $(this).attr('data-url');
-
+    function addToCartAjax(url, delete_cart_url){
         $.ajax({
             type: 'GET',
             url: url,
@@ -14,7 +9,32 @@ $(document).ready(function(){
                         window.location = '/login';
                     })
                 }
-                if(response.status == 'Failed'){
+                else if(response.status == 'different_vendors'){
+                    Swal.fire({
+                        title: response.message,
+                        text: 'Your cart contains items from other restaurant. Would you like to reset your cart for adding items from this restaurant?',
+                        showCancelButton: true,
+                        cancelButtonText: 'NO',
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'YES, START AFRESH',
+                    }).then((result) => {
+                        if(result.isConfirmed){
+                            // Delete complete cart made ajax call
+                            $.ajax({
+                                type: 'GET',
+                                url: delete_cart_url,
+                                success: function(res){
+                                    $('#cart_counter').html(res.cart_counter["cart_count"]);
+                                    // Add the new product in cart
+                                    // Call the addToCartAjax function again recursively
+                                    addToCartAjax(url, delete_cart_url);
+                                }
+                            })
+                        }
+                    });
+                }
+                else if(response.status == 'Failed'){
                     Swal.fire({
                       icon: 'error',
                       title: response.message
@@ -27,7 +47,18 @@ $(document).ready(function(){
                 }
             }
         })
-    })
+    }
+
+    $('.add_to_cart').on('click', function(e) {
+    e.preventDefault();
+
+    prod_id = $(this).attr('data-id');
+    url = $(this).attr('data-url');
+    delete_cart_url = $(this).attr('data-delete-cart-url');
+
+    // Call the addToCartAjax function for the first time
+    addToCartAjax(url, delete_cart_url);
+    });
 
     $('.remove_from_cart').on('click', function(e){
         e.preventDefault();

@@ -133,7 +133,9 @@
                                                 <div class="price-holder">
                                                     <span class="price">£{{ item.price }}</span>
                                                     <a href="#" class="add_to_cart" data-id="{{ item.id }}"
-                                                       data-url="{% url 'add_to_cart' item.id %}">
+                                                       data-url="{% url 'add_to_cart' item.id %}"
+                                                       data-delete-cart-url="{% url 'delete_cart' %}"
+                                                    >
                                                         <i class="icon-plus4 text-color">
                                                         </i>
                                                     </a>

@@ -59,13 +59,32 @@ def add_to_cart(request, product_id):
                          'qty': chkCart.quantity}
                     )
                 except:
-                    chkCart = Cart.objects.create(user=request.user, products=prod, quantity=1)
-                    return JsonResponse(
-                        {'status': 'Success',
-                         'message': 'Product added to the cart.',
-                         'cart_counter': get_cart_counter(request),
-                         'qty': chkCart.quantity}
-                    )
+                    # check if any cart for this user
+                    try:
+                        any_cart_items = Cart.objects.filter(user=request.user)[:1].get()
+                        existing_vendor_id = any_cart_items.products.vendor.id
+                        if prod.vendor.id == existing_vendor_id:
+                            chkCart = Cart.objects.create(user=request.user, products=prod, quantity=1)
+                            return JsonResponse(
+                                {'status': 'Success',
+                                 'message': 'Product added to the cart.',
+                                 'cart_counter': get_cart_counter(request),
+                                 'qty': chkCart.quantity}
+                            )
+                        else:
+                            return JsonResponse(
+                                {'status': 'different_vendors',
+                                 'message': 'Items already in cart'
+                                 }
+                            )
+                    except:
+                        chkCart = Cart.objects.create(user=request.user, products=prod, quantity=1)
+                        return JsonResponse(
+                            {'status': 'Success',
+                             'message': 'Product added to the cart.',
+                             'cart_counter': get_cart_counter(request),
+                             'qty': chkCart.quantity}
+                        )
             except:
                 return JsonResponse({'status': 'Failed', 'message': 'This product does not exist.'})
         else:
@@ -122,6 +141,31 @@ def delete_from_cart(request, cart_id):
                     )
             except:
                 return JsonResponse({'status': 'Failed', 'message': 'Cart item does not exist.'})
+        else:
+            return JsonResponse({'status': 'Failed', 'message': 'Invalid request.'})
+    else:
+        return JsonResponse({'status': 'login_required', 'message': 'Please login to continue.'})
+
+
+def delete_cart(request):
+    print('delete cart is called')
+    if request.user.is_authenticated:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            # Check if cart items exists
+            try:
+                cart_item = Cart.objects.filter(user=request.user)
+                if cart_item:
+                    cart_item.delete()
+                    return JsonResponse(
+                        {
+                            'status': 'Success',
+                            'message': 'Cart has been deleted.',
+                            'cart_counter': get_cart_counter(request),
+                            'qty': 0
+                        }
+                    )
+            except:
+                return JsonResponse({'status': 'Failed', 'message': 'No items in cart.'})
         else:
             return JsonResponse({'status': 'Failed', 'message': 'Invalid request.'})
     else:

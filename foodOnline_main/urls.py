@@ -29,4 +29,6 @@ urlpatterns = [
     path('marketplace/', include('marketplace.urls')),
     # Cart
     path('cart/', market_place_views.cart, name='cart'),
+    # Delete cart
+    path('delete_cart/', market_place_views.delete_cart, name='delete_cart'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

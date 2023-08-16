@@ -44,6 +44,14 @@ $(document).ready(function(){
                 else{
                     $('#cart_counter').html(response.cart_counter["cart_count"]);
                     $('#qty-'+prod_id).html(response.qty);
+
+                    // add amounts of cart
+                    applyCartAmounts(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['pickup_fee'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['grand_total']
+                    )
                 }
             }
         })
@@ -87,6 +95,14 @@ $(document).ready(function(){
                     $('#cart_counter').html(response.cart_counter["cart_count"]);
                     $('#qty-'+prod_id).html(response.qty);
 
+                    // add amounts of cart
+                    applyCartAmounts(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['pickup_fee'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['grand_total']
+                    )
+
                     // Since we are calling below functions in the delete from the cart. So if we are on the marketplace page
                     // and decrease the number of items to zero, it will give an error and there is no cart-item object
                     // on the marketplace page.
@@ -125,6 +141,15 @@ $(document).ready(function(){
                 else{
                     $('#cart_counter').html(response.cart_counter["cart_count"]);
                     Swal.fire( response.status , response.message, 'success');
+
+                    // add amounts of cart
+                    applyCartAmounts(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['pickup_fee'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['grand_total']
+                    )
+
                     removeCartItem(0, cart_id);
                     checkEmptyCart();
                 }
@@ -161,4 +186,13 @@ $(document).ready(function(){
         }
     }
 
+    //apply cart amounts
+    function applyCartAmounts(subtotal, pickup_fees, tax, grand_total){
+        if(window.location.pathname == '/cart/'){
+            $('#subtotal').html(subtotal);
+            $('#pickup-fee').html(pickup_fees);
+            $('#tax-on-cart').html(tax);
+            $('#grand-total').html(grand_total);
+        }
+    }
 });

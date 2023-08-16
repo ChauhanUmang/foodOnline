@@ -86,7 +86,8 @@
                                     <ul class="order-detail-options order-total">
                                         <li class="created-date">
                                             <strong>Subtotal:</strong>
-                                            <span>£24.50</span>
+                                            <span id="subtotal">{{ subtotal }}</span>
+                                            <span>$</span>
                                         </li>
 
                                         <div style="clear:both;"></div>
@@ -94,21 +95,24 @@
                                         <li class="order-type">
                                             <strong>
                                                 Pick Up Fee: </strong>
-                                            <span>£10.00</span>
+                                            <span id="pickup-fee">{{ pickup_fee }}</span>
+                                            <span>$</span>
                                         </li>
 
                                         <div style="clear:both;"></div>
 
                                         <li class="order-type">
                                             <strong>VAT (13%)</strong>
-                                            <span>£4.48</span>
+                                            <span id="tax-on-cart">{{ tax }}</span>
+                                            <span>$</span>
                                         </li>
 
                                         <div style="clear:both;"></div>
 
                                         <li class="order-type total-price">
                                             <strong>Total:</strong>
-                                            <span>£38.99</span>
+                                            <span id="grand-total">{{ grand_total }}</span>
+                                            <span>$</span>
                                         </li>
                                     </ul>
                                 </div>

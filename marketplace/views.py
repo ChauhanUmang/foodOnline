@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
-from marketplace.context_processors import get_cart_counter
+from marketplace.context_processors import get_cart_counter, get_cart_amount
 from marketplace.models import Cart
 from menu.models import Category, Product
 from vendor.models import Vendor
@@ -56,7 +56,9 @@ def add_to_cart(request, product_id):
                         {'status': 'Success',
                          'message': 'Product increased in cart.',
                          'cart_counter': get_cart_counter(request),
-                         'qty': chkCart.quantity}
+                         'qty': chkCart.quantity,
+                         'cart_amount': get_cart_amount(request)
+                         }
                     )
                 except:
                     # check if any cart for this user
@@ -69,7 +71,9 @@ def add_to_cart(request, product_id):
                                 {'status': 'Success',
                                  'message': 'Product added to the cart.',
                                  'cart_counter': get_cart_counter(request),
-                                 'qty': chkCart.quantity}
+                                 'qty': chkCart.quantity,
+                                 'cart_amount': get_cart_amount(request)
+                                 }
                             )
                         else:
                             return JsonResponse(
@@ -83,7 +87,9 @@ def add_to_cart(request, product_id):
                             {'status': 'Success',
                              'message': 'Product added to the cart.',
                              'cart_counter': get_cart_counter(request),
-                             'qty': chkCart.quantity}
+                             'qty': chkCart.quantity,
+                             'cart_amount': get_cart_amount(request)
+                             }
                         )
             except:
                 return JsonResponse({'status': 'Failed', 'message': 'This product does not exist.'})
@@ -112,7 +118,9 @@ def remove_from_cart(request, product_id):
                     return JsonResponse(
                         {'status': 'Success',
                          'cart_counter': get_cart_counter(request),
-                         'qty': chkCart.quantity}
+                         'qty': chkCart.quantity,
+                         'cart_amount': get_cart_amount(request)
+                         }
                     )
                 except:
                     return JsonResponse({'status': 'Failed', 'message': 'You do not have this item in your cart!'})
@@ -136,7 +144,8 @@ def delete_from_cart(request, cart_id):
                         {
                             'status': 'Success',
                             'message': 'Cart item has been deleted.',
-                            'cart_counter': get_cart_counter(request)
+                            'cart_counter': get_cart_counter(request),
+                            'cart_amount': get_cart_amount(request)
                         }
                     )
             except:

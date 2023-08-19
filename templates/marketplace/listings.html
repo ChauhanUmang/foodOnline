@@ -49,8 +49,11 @@
                                                 </h5>
                                             </div>
                                             <address>
-                                                <span>Address : </span>
-                                                {{ vendor.user_profile.address }}
+                                                <span class="text-muted" style="font-size: 13px;">{{ vendor.user_profile.address }}</span>
+                                                <br>
+                                                {% if vendor.kms %}
+                                                <span><small><b>{{ vendor.kms }}km</b></small></span>
+                                                {% endif %}
                                             </address>
                                         </div>
 

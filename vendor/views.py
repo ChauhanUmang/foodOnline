@@ -4,8 +4,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from accounts.forms import UserProfileForm
 from accounts.models import UserProfile
 from accounts.views import check_role_vendor
-from vendor.forms import VendorForm
-from vendor.models import Vendor
+from vendor.forms import VendorForm, OpeningHourForm
+from vendor.models import Vendor, OpeningHour
+from vendor.utils import get_vendor
 
 
 @login_required(login_url='login')
@@ -38,3 +39,13 @@ def profile(request):
     }
 
     return render(request, 'vendor/profile.html', context)
+
+
+def opening_hours(request):
+    open_hours = OpeningHour.objects.filter(vendor=get_vendor(request))
+    form = OpeningHourForm()
+    context = {
+        'form': form,
+        'opening_hours': open_hours,
+    }
+    return render(request, 'vendor/opening_hours.html', context)

@@ -8,4 +8,7 @@ urlpatterns = [
 
     # Category CRUD
     path('menu/', include('menu.urls')),
+
+    # Opening Hours
+    path('opening-hours/', views.opening_hours, name='opening_hours'),
 ]

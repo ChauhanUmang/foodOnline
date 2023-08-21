@@ -39,7 +39,8 @@
                                     <tr>
                                         <td class="text-left">{{ forloop.counter }}</td>
                                         <td class="text-left">
-                                            <a href="{% url 'products_by_category' cat.id %}">
+                                            <a href="{% url 'products_by_category' cat.id %}"
+                                               style="text-decoration: none;">
                                                 <p class="mb-0 font-weight-bold">
                                                     {{ cat.category_name }}
                                                 </p>

@@ -115,9 +115,3 @@ def add_opening_hours(request):
         return JsonResponse({'status': 'login_required', 'message': 'Please login to continue.'})
 
 
-def validate_opening_hours(request):
-    day = request.POST.get('day')
-    from_hour = request.POST.get('from_hour')
-    to_hour = request.POST.get('to_hour')
-    is_closed = request.POST.get('is_closed')
-

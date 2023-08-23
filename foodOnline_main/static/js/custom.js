@@ -73,3 +73,59 @@ function onPlaceChanged(){
 
     $('#id_pin_code').val(postcode);
 }
+
+
+$(document).ready(function(){
+    $('#add_opening_hour_btn').on('click', function(e){
+        e.preventDefault();
+
+        var day = document.getElementById('id_day').value;
+        var from_hour = document.getElementById('id_from_hour').value;
+        var to_hour = document.getElementById('id_to_hour').value;
+        var is_closed = document.getElementById('id_is_closed').checked;
+        var csrf_token = $('input[name=csrfmiddlewaretoken]').val();
+        var url = document.getElementById('add_hour_url').value;
+
+        if(is_closed){
+            is_closed_val = 'True';
+        }
+        else{
+            is_closed_val = 'False';
+        }
+
+        if((day != '' && from_hour != '' && to_hour != '') || (day != '' && is_closed)){
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'day': day,
+                    'from_hour': from_hour,
+                    'to_hour': to_hour,
+                    'is_closed': is_closed_val,
+                    'csrfmiddlewaretoken': csrf_token
+                },
+                success: function(response){
+                    if(response.status == 'Success'){
+                        if(response.is_closed == 'Closed'){
+                            html = '<tr><td><b>'+ response.day +'</b></td><td>Closed</td><td><a href="" style="text-decoration: none; color: #ff2727;"><i class="icon-close2"></i></a></td></tr>';
+                        }
+                        else{
+                            html = '<tr><td><b>'+ response.day +'</b></td><td>'+ response.from_hour + ' - '+ response.to_hour +'</td><td><a href="" style="text-decoration: none; color: #ff2727;"><i class="icon-close2"></i></a></td></tr>';
+                        }
+                        $('.opening_hours').append(html);
+                        document.getElementById('opening_hours').reset();
+                    }
+                    else{
+                        Swal.fire(response.message, '', 'error');
+                    }
+                }
+            })
+        }
+        else{
+            Swal.fire('Please fill all the details.', '', 'info');
+        }
+
+    })
+
+    //document ready closed
+});

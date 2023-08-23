@@ -23,22 +23,24 @@
                             <h5 class="text-uppercase">Opening Hours</h5>
                             <hr>
 
-                            <form id="opening_hours" action="">
+                            <form id="opening_hours">
+                                {% csrf_token %}
                                 <div class="row">
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         {{ form.day }}
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         {{ form.from_hour }}
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         {{ form.to_hour }}
                                     </div>
                                     <div class="col-md-2" style="padding-top: 8px;">
                                         {{ form.is_closed }} Set as Closed
                                     </div>
-                                    <div class="col-md-2" style="padding-top: 3px;">
-                                        <button class="btn btn-success">Add Hours</button>
+                                    <div class="col-md-3" style="padding-top: 3px;">
+                                        <input type="hidden" value="{% url 'add_opening_hours' %}" id="add_hour_url">
+                                        <button id="add_opening_hour_btn" class="btn btn-success w-100">Add Hours</button>
                                     </div>
                                 </div>
                             </form>

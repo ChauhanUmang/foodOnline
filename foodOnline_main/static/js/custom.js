@@ -76,6 +76,7 @@ function onPlaceChanged(){
 
 
 $(document).ready(function(){
+    // Add Opening Hour Functionality
     $('#add_opening_hour_btn').on('click', function(e){
         e.preventDefault();
 
@@ -107,10 +108,10 @@ $(document).ready(function(){
                 success: function(response){
                     if(response.status == 'Success'){
                         if(response.is_closed == 'Closed'){
-                            html = '<tr><td><b>'+ response.day +'</b></td><td>Closed</td><td><a href="" style="text-decoration: none; color: #ff2727;"><i class="icon-close2"></i></a></td></tr>';
+                            html = '<tr id="hour-'+ response.id +'"><td><b>'+ response.day +'</b></td><td>Closed</td><td><a href="" class="remove_hour" data-url="/vendor/opening-hours/remove/'+ response.id +'/" style="text-decoration: none; color: #ff2727;"><i class="icon-close2"></i></a></td></tr>';
                         }
                         else{
-                            html = '<tr><td><b>'+ response.day +'</b></td><td>'+ response.from_hour + ' - '+ response.to_hour +'</td><td><a href="" style="text-decoration: none; color: #ff2727;"><i class="icon-close2"></i></a></td></tr>';
+                            html = '<tr id="hour-'+ response.id +'"><td><b>'+ response.day +'</b></td><td>'+ response.from_hour + ' - '+ response.to_hour +'</td><td><a href="" class="remove_hour" data-url="/vendor/opening-hours/remove/'+ response.id +'/" style="text-decoration: none; color: #ff2727;"><i class="icon-close2"></i></a></td></tr>';
                         }
                         $('.opening_hours').append(html);
                         document.getElementById('opening_hours').reset();
@@ -125,6 +126,26 @@ $(document).ready(function(){
             Swal.fire('Please fill all the details.', '', 'info');
         }
 
+    });
+
+    // Remove Opening Hour Functionality
+    $(document).on('click', '.remove_hour', function(e){
+        e.preventDefault();
+
+        url = $(this).attr('data-url');
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function(response){
+                if(response.status == 'Success'){
+                    document.getElementById('hour-' + response.id).remove()
+                }
+                else{
+                    Swal.fire(response.message, '', 'error');
+                }
+            }
+        })
     })
 
     //document ready closed

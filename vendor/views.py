@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import IntegrityError
-
+from datetime import datetime
 from accounts.forms import UserProfileForm
 from accounts.models import UserProfile
 from accounts.views import check_role_vendor
@@ -67,18 +67,11 @@ def add_opening_hours(request):
             else:
                 is_closed = False
 
-            print(f'Day is {day}')
-            print(f'from_hour is {from_hour}')
-            print(f'to_hour is {to_hour}')
-            print(f'is closed is {is_closed}')
-
             try:
                 # Check if an entry is there for that day.
                 existing_hour = OpeningHour.objects.get(vendor=get_vendor(request), day=day)
-                print('Step 1')
                 # Condition 1
                 if is_closed:
-                    print('Step - 2')
                     if existing_hour.from_hour or existing_hour.to_hour:
                         # means from_hour and to_hour have some values
                         response = {'status': 'Failed', 'message': 'Opening Hours already exists for this day!'}
@@ -89,7 +82,11 @@ def add_opening_hours(request):
                     if existing_hour.is_closed:
                         response = {'status': 'Failed', 'message': 'This is already marked as a closed day.'}
                     else:
-                        if existing_hour.from_hour <= to_hour and from_hour <= existing_hour.to_hour:
+                        efh = datetime.strptime(existing_hour.from_hour, '%I:%M %p')
+                        eth = datetime.strptime(existing_hour.to_hour, '%I:%M %p')
+                        fh = datetime.strptime(from_hour, '%I:%M %p')
+                        th = datetime.strptime(to_hour, '%I:%M %p')
+                        if efh <= th and fh <= eth:
                             response = {'status': 'Failed', 'message': 'Overlapping Opening Hours.'}
 
                 return JsonResponse(response)
@@ -115,3 +112,16 @@ def add_opening_hours(request):
         return JsonResponse({'status': 'login_required', 'message': 'Please login to continue.'})
 
 
+def remove_opening_hours(request, pk=None):
+    if request.user.is_authenticated:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'GET':
+            try:
+                hour = OpeningHour.objects.get(id=pk)
+                hour.delete()
+                return JsonResponse({'status': 'Success', 'id': pk})
+            except:
+                return JsonResponse({'status': 'Failed', 'message': 'Opening Hour does not exist.'})
+        else:
+            return JsonResponse({'status': 'Failed', 'message': 'Invalid request.'})
+    else:
+        return JsonResponse({'status': 'login_required', 'message': 'Please login to continue.'})

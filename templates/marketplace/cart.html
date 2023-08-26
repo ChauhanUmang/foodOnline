@@ -101,13 +101,17 @@
 
                                         <div style="clear:both;"></div>
 
-                                        <li class="order-type">
-                                            <strong>VAT (13%)</strong>
-                                            <span id="tax-on-cart">{{ tax }}</span>
-                                            <span>$</span>
-                                        </li>
+                                        {% for key, value in tax_dict.items %}
+                                            {% for i, j in value.items %}
+                                                <li class="order-type">
+                                                    <strong>{{ key }} ({{ i }}%)</strong>
+                                                    <span id="tax-on-cart">{{ j }}</span>
+                                                    <span>$</span>
+                                                </li>
 
-                                        <div style="clear:both;"></div>
+                                                <div style="clear:both;"></div>
+                                            {% endfor %}
+                                        {% endfor %}
 
                                         <li class="order-type total-price">
                                             <strong>Total:</strong>

@@ -25,13 +25,14 @@ class Vendor(models.Model):
 
         is_open = None
         for i in current_opening_hours:
-            start_time = str(datetime.strptime(i.from_hour, '%I:%M %p').time())
-            end_time = str(datetime.strptime(i.to_hour, '%I:%M %p').time())
+            if not i.is_closed:
+                start_time = str(datetime.strptime(i.from_hour, '%I:%M %p').time())
+                end_time = str(datetime.strptime(i.to_hour, '%I:%M %p').time())
 
-            if start_time < present_time < end_time:
-                is_open = True
-            else:
-                is_open = False
+                if start_time < present_time < end_time:
+                    is_open = True
+                else:
+                    is_open = False
 
         return is_open
 

@@ -44,10 +44,4 @@ def get_cart_amount(request):
         # {'CGST': {'9.00': '2.00'}, 'SGST': {'7.00': '1.56'}}
         # tax = round(float(0.13) * float(subtotal + pickup_fee), 2)
         grand_total = round(float(subtotal) + float(pickup_fee) + float(tax), 2)
-
-        print(subtotal)
-        print(pickup_fee)
-        print(tax)
-        print(grand_total)
-        print(tax_dict)
     return dict(subtotal=subtotal, pickup_fee=pickup_fee, tax=tax, grand_total=grand_total, tax_dict=tax_dict)

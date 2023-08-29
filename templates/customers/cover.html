@@ -10,16 +10,25 @@
                 <div class="company-info-detail">
                     <div class="company-info">
                         <div class="img-holder">
-                            <figure>
-                                <img src="{% static 'extra-images/listing-logo18.png' %}" alt="">
+                            <figure style="height: 100%;">
+<!--                                <img src="{% static 'extra-images/listing-logo18.png' %}" alt="">-->
+                                <img src="{% if profile.profile_picture %}
+                                                {{ profile.profile_picture.url }}
+                                           {% else %}
+                                                {% static 'images/default_profile.jpg' %}
+                                           {% endif %}" alt="" style="height: 100%;">
                             </figure>
                         </div>
 
                         <div class="text-holder">
-                            <span class="restaurant-title">Umang Chauhan</span>
+                            <span class="restaurant-title">{{ profile.user.first_name }} {{ profile.user.last_name }}</span>
                             <div class="text">
-                                <i class="icon-location"></i>
-                                <p>+47 123456789</p>
+                                <i class="icon-phone"></i>
+                                <p>{{ profile.user.phone_number }}</p>
+                            </div>
+                            <div class="text">
+                                <i class="icon-mail5"></i>
+                                <p>{{ profile.user.email }}</p>
                             </div>
                         </div>
                     </div>

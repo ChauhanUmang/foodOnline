@@ -82,7 +82,15 @@
                                 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                                     <h3>Order Total</h3>
                                 </div>
-                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"
+                                     style="background-color: #f1f3f8;
+                                            margin: 0 0 12px;
+                                            font-size: 12px;
+                                            color: #2f313a;
+                                            padding: 10px 15px;
+                                            line-height: normal;
+                                            font-family: 'Montserrat', sans-serif;
+                                            border-radius: 5px;">
                                     <ul class="order-detail-options order-total">
                                         <li class="created-date">
                                             <strong>Subtotal:</strong>
@@ -113,13 +121,23 @@
                                             {% endfor %}
                                         {% endfor %}
 
-                                        <li class="order-type total-price">
+                                        <li class="order-type total-price" style="padding-top: 5px;">
                                             <strong>Total:</strong>
                                             <span id="grand-total">{{ grand_total }}</span>
                                             <span>$</span>
                                         </li>
                                     </ul>
                                 </div>
+
+                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 pr-0 pl-0">
+                                    <a href="{% url 'checkout' %}" class="btn bgcolor w-100 mt-3 p-2" style="color: #fff;">
+                                        PROCEED TO CHECKOUT
+                                    </a>
+                                </div>
+
                             </div>
                         {% else %}
 

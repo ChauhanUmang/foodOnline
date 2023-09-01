@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 
 <!-- Main Section Start -->
@@ -21,7 +21,7 @@
                             <div id="billing-home" class="tab-pane in active">
                                 <div class="menu-itam-holder">
                                     <div id="menu-item-list-6272" class="menu-itam-list">
-                                        <form action="#" method="post">
+                                        <form action="{% url 'place_order' %}" method="post">
                                             {% csrf_token %}
 
                                             <div class="row">
@@ -85,31 +85,22 @@
                         <div class="tab-content">
                             <div id="home" class="tab-pane in active">
                                 <div class="menu-itam-holder">
-
                                     <div id="menu-item-list-6272-2" class="menu-itam-list">
                                         <ul>
-                                            {% if cart_items %}
-                                                {% for item in cart_items %}
-                                                <li id="cart-item-{{item.id}}" style="padding: 10px 0; margin: 10px 0;">
-                                                    <div class="text-holder">
-                                                        <h6>
-                                                            {{ item.products.product_title }} <small>x {{ item.quantity }} qty</small>
-                                                        </h6>
-<!--                                                        <span>x {{ item.quantity }} QTY {{ item.products.description }}</span>-->
-                                                    </div>
-                                                    <div class="price-holder" style="margin-top: 0;">
-                                                        <span class="price">${{ item.products.price }}</span>
-                                                    </div>
-                                                </li>
-                                                {% endfor %}
-                                            {% else %}
-                                                <div class="text-center p-5">
-                                                    <h3>Cart is empty</h3>
+                                            {% for item in cart_items %}
+                                            <li id="cart-item-{{item.id}}" style="padding: 10px 0; margin: 10px 0;">
+                                                <div class="text-holder">
+                                                    <h6>
+                                                        {{ item.products.product_title }} <small>x {{ item.quantity }} qty</small>
+                                                    </h6>
                                                 </div>
-                                            {% endif %}
+                                                <div class="price-holder" style="margin-top: 0;">
+                                                    <span class="price">${{ item.products.price }}</span>
+                                                </div>
+                                            </li>
+                                            {% endfor %}
                                         </ul>
                                     </div>
-
                                     <div style="background-color: #f1f3f8;
                                             margin: 0 0 12px;
                                             font-size: 14px;
@@ -157,7 +148,24 @@
                                                 </span>
                                             </li>
 
-                                            <button type="submit" class="btn btn-danger w-100 p-2 mt-3">
+                                            <!-- Select Payment Method -->
+                                            <h5 style="padding: 12px 0 12px; margin: 12px 0 0; border-top: 1px solid green;">
+                                                SELECT PAYMENT METHOD
+                                            </h5>
+                                            <div class="payment-method">
+                                                <label style="width: 49%; text-align:center;">
+                                                    <input type="radio" name="payment_method" id="" value="Paypal">
+                                                    <img src="{% static 'images/PayPal.png' %}" alt="PayPal" width="100">
+                                                </label>
+
+                                                <label style="width: 49%; text-align:center;">
+                                                    <input type="radio" name="payment_method" id="" value="RazorPay">
+                                                    <img src="{% static 'images/razorpay_logo.png' %}" alt="RazorPay" width="100">
+                                                </label>
+                                            </div>
+                                            <span class="text-danger" id="payment-method-error"></span>
+
+                                            <button onclick="return payMethodConfirm();" type="submit" class="btn btn-danger w-100 p-2 mt-3">
                                                 PLACE ORDER
                                             </button>
                                         </ul>
@@ -178,5 +186,30 @@
     </div>
 </div>
 <!-- Main Section End -->
+
+<script>
+    function payMethodConfirm(){
+        var payMethod = $("input[name='payment_method']:checked").val()
+        if(!payMethod){
+            $('#payment-method-error').html('Select Payment Method!');
+            return false;
+        }
+        else{
+            var conf = confirm('You have selected '+ payMethod +' as your preferred payment method. \n Click "OK" to continue.')
+            if(conf == true){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+    }
+
+    $("input[name='payment_method']").on('change', function(){
+        $('#payment-method-error').html('');
+    });
+
+
+</script>
 
 {% endblock %}

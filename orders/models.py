@@ -51,7 +51,7 @@ class Order(models.Model):
     # Concatenate first name and last name
     @property
     def name(self):
-        return f'{self.first_name}{self.last_name}'
+        return f'{self.first_name} {self.last_name}'
 
     def __str__(self):
         return self.order_number

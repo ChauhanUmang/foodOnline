@@ -164,13 +164,11 @@ def my_account(request):
 @login_required(login_url='login')
 @user_passes_test(check_role_customer)
 def cust_dashboard(request):
-    existing_profile = get_object_or_404(UserProfile, user=request.user)
     orders = Order.objects.filter(user=request.user, is_ordered=True)
     recent_orders = orders[:5]
     context = {
         'orders': recent_orders,
-        'orders_count': orders.count(),
-        'profile': existing_profile
+        'orders_count': orders.count()
     }
     return render(request, 'accounts/cust_dashboard.html', context)
 

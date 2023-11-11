@@ -41,11 +41,8 @@ def profile(request):
 @user_passes_test(check_role_customer)
 def my_orders(request):
     orders = Order.objects.filter(user=request.user, is_ordered=True).order_by('-created_at')
-    existing_profile = get_object_or_404(UserProfile, user=request.user)
     context = {
-        'orders': orders,
-        'orders_count': orders.count(),
-        'profile': existing_profile
+        'orders': orders
     }
 
     return render(request, 'customers/my_orders.html', context)

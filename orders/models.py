@@ -56,6 +56,11 @@ class Order(models.Model):
     def __str__(self):
         return self.order_number
 
+    @property
+    def order_val(self):
+        val = self.total - self.total_tax
+        return val
+
 
 class OrderedProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

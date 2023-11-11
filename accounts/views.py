@@ -1,14 +1,14 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.defaultfilters import slugify
 from django.utils.http import urlsafe_base64_decode
-
 from accounts.forms import UserForm
 from accounts.models import User, UserProfile
 from django.contrib import messages, auth
 from accounts.utils import detect_user, send_mail
+from orders.models import Order
 from vendor.forms import VendorForm
 
 
@@ -164,7 +164,15 @@ def my_account(request):
 @login_required(login_url='login')
 @user_passes_test(check_role_customer)
 def cust_dashboard(request):
-    return render(request, 'accounts/cust_dashboard.html')
+    existing_profile = get_object_or_404(UserProfile, user=request.user)
+    orders = Order.objects.filter(user=request.user, is_ordered=True)
+    recent_orders = orders[:5]
+    context = {
+        'orders': recent_orders,
+        'orders_count': orders.count(),
+        'profile': existing_profile
+    }
+    return render(request, 'accounts/cust_dashboard.html', context)
 
 
 @login_required(login_url='login')

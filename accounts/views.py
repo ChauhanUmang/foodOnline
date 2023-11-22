@@ -10,6 +10,7 @@ from django.contrib import messages, auth
 from accounts.utils import detect_user, send_mail
 from orders.models import Order
 from vendor.forms import VendorForm
+from vendor.models import Vendor
 
 
 # Create Decorator to restrict vendor from accessing customer page
@@ -176,7 +177,15 @@ def cust_dashboard(request):
 @login_required(login_url='login')
 @user_passes_test(check_role_vendor)
 def vendor_dashboard(request):
-    return render(request, 'accounts/vendor_dashboard.html')
+    vendor = Vendor.objects.get(user=request.user)
+    orders = Order.objects.filter(vendors__in=[vendor.id], is_ordered=True)\
+        .order_by('-created_at')
+    recent_orders = orders[:5]
+    context = {
+        'orders': recent_orders,
+        'orders_count': orders.count()
+    }
+    return render(request, 'accounts/vendor_dashboard.html', context)
 
 
 def activate(request, uidb64, token):

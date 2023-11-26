@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
@@ -7,6 +9,7 @@ from datetime import datetime
 from accounts.forms import UserProfileForm
 from accounts.models import UserProfile
 from accounts.views import check_role_vendor
+from orders.models import Order, OrderedProduct
 from vendor.forms import VendorForm, OpeningHourForm
 from vendor.models import Vendor, OpeningHour
 from vendor.utils import get_vendor
@@ -125,3 +128,25 @@ def remove_opening_hours(request, pk=None):
             return JsonResponse({'status': 'Failed', 'message': 'Invalid request.'})
     else:
         return JsonResponse({'status': 'login_required', 'message': 'Please login to continue.'})
+
+
+def order_details(request, order_number):
+    try:
+        detail_of_order = Order.objects.get(order_number=order_number, is_ordered=True)
+        ordered_products = OrderedProduct.objects.filter(order=detail_of_order, product__vendor=get_vendor(request))
+
+        subtotal = 0
+        for item in ordered_products:
+            subtotal += (item.price * item.quantity)
+
+        tax_data = json.loads(detail_of_order.tax_data)
+
+        context = {
+            'order': detail_of_order,
+            'ordered_product': ordered_products,
+            'subtotal': subtotal,
+            'tax_data': tax_data
+        }
+        return render(request, 'vendor/order_details.html', context)
+    except:
+        return redirect('vendor')

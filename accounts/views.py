@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import PermissionDenied
@@ -181,9 +183,26 @@ def vendor_dashboard(request):
     orders = Order.objects.filter(vendors__in=[vendor.id], is_ordered=True)\
         .order_by('-created_at')
     recent_orders = orders[:5]
+
+    # total revenue
+    total_revenue = 0
+    for i in orders:
+        total_revenue += i.total
+
+
+    # Current month revenue
+    current_month = datetime.datetime.now().month
+    current_month_orders = orders.filter(vendors__in=[vendor.id], created_at__month=current_month)
+    current_month_revenue = 0
+    for i in current_month_orders:
+        current_month_revenue += i.total
+
+
     context = {
         'orders': recent_orders,
-        'orders_count': orders.count()
+        'orders_count': orders.count(),
+        'total_revenue': total_revenue,
+        'current_month_revenue': current_month_revenue,
     }
     return render(request, 'accounts/vendor_dashboard.html', context)
 

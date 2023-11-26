@@ -44,7 +44,7 @@
                                             Total Revenue
                                         </div>
                                         <div class="card-body text-center">
-                                            <a href="#"><h5 class="card-title">$5345.67</h5></a>
+                                            <a href="#"><h5 class="card-title">${{ total_revenue | floatformat:2 }}</h5></a>
                                         </div>
                                     </div>
                                 </div>
@@ -55,7 +55,7 @@
                                             This month
                                         </div>
                                         <div class="card-body text-center">
-                                            <a href="#"><h5 class="card-title">$352.12</h5></a>
+                                            <a href="#"><h5 class="card-title">${{ current_month_revenue | floatformat:2 }}</h5></a>
                                         </div>
                                     </div>
                                 </div>
@@ -78,18 +78,20 @@
                                                     <div>Total Price</div>
                                                     <div>Charges</div>
                                                     <div>Received</div>
+                                                    <div>Status</div>
                                                     <div>Action</div>
                                                 </li>
 
                                                 {% for order in orders  %}
 
                                                 <li class="order-heading-titles">
-                                                    <div><b><a href="{% url 'order_details' order.order_number %}" class="text-dark">{{ order.order_number }}</a></b></div>
+                                                    <div><b><a href="{% url 'vendor_order_details' order.order_number %}" class="text-dark">{{ order.order_number }}</a></b></div>
                                                     <div>{{ order.created_at }}</div>
                                                     <div>${{ order.order_val}}</div>
                                                     <div>${{ order.total_tax }}</div>
                                                     <div>${{ order.total }}</div>
-                                                    <div><a href="{% url 'order_details' order.order_number %}" class="btn btn-danger">Details</a></div>
+                                                    <div><span class="order-status" style="background-color: #047a06;">{{ order.status }}</span></div>
+                                                    <div><a href="{% url 'vendor_order_details' order.order_number %}" class="btn btn-danger">Details</a></div>
                                                 </li>
 
                                                 {% endfor %}

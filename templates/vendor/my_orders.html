@@ -1,10 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
 
 {% include 'includes/alerts.html' %}
-
 <!-- Main Section Start -->
 <div class="main-section">
 
@@ -21,54 +19,9 @@
                 <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                     <div class="user-dashboard loader-holder">
                         <div class="user-holder">
-
                             <h5 class="text-uppercase">
-                                Overview
+                                My Orders
                             </h5>
-
-                            <p>Logged in as: <b>{{ user.email }}</b></p>
-
-                            <div class="row">
-                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            Total Orders
-                                        </div>
-                                        <div class="card-body text-center">
-                                            <a href="#"><h5 class="card-title">{{ orders_count }}</h5></a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            Total Revenue
-                                        </div>
-                                        <div class="card-body text-center">
-                                            <a href="#"><h5 class="card-title">${{ total_revenue | floatformat:2 }}</h5></a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            This month
-                                        </div>
-                                        <div class="card-body text-center">
-                                            <a href="#"><h5 class="card-title">${{ current_month_revenue | floatformat:2 }}</h5></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <br>
-
-                            <h5 class="text-uppercase">
-                                Recent Orders
-                            </h5>
-
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="user-orders-list">
@@ -80,7 +33,6 @@
                                                     <div>Total Price</div>
                                                     <div>Charges</div>
                                                     <div>Received</div>
-                                                    <div>Status</div>
                                                     <div>Action</div>
                                                 </li>
 
@@ -92,12 +44,11 @@
                                                     <div>${{ order.order_val}}</div>
                                                     <div>${{ order.total_tax }}</div>
                                                     <div>${{ order.total }}</div>
-                                                    <div><span class="order-status" style="background-color: #047a06;">{{ order.status }}</span></div>
+                                                    <!-- <div><span class="order-status" style="background-color: #047a06;">{{ order.status }}</span></div>-->
                                                     <div><a href="{% url 'vendor_order_details' order.order_number %}" class="btn btn-danger">Details</a></div>
                                                 </li>
 
                                                 {% endfor %}
-
                                             </ul>
 
                                         </div>

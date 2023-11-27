@@ -37,13 +37,13 @@
   <table bgcolor="#EAF0F6" width="100%" role="presentation" border="0" cellpadding="0" cellspacing="10px" style="padding: 30px 30px 60px 60px;">
     <tr>
       <td>
-        <h2 style="text-align: center;">Reset Password</h2>
+        <h2 style="text-align: center;">Activate Your Account</h2>
         <p style="text-align: left;">Hey there,</p>
-        <p style="text-align: left;">Forgot your password?</p>
-        <p style="text-align: left;">We received a request to reset the password of your account.</p>
-        <p style="text-align: left;">To reset your password, click on the button below:</p>
+        <p style="text-align: left;">FoodOnline Business wants to build and grow with you. And all that stands between you and your first order is the button below.</p>
+        <p style="text-align: left;">Click to verify your account. You'll be redirected to FoodOnline - where you can start building your menu right away.</p>
+        <p style="text-align: left;">Happy Business!</p>
         <div style="text-align: center;">
-          <a href="http://{{ domain }}{% url 'reset_password_validate' uidb64=uid token=token %}" class="activate-btn" style="color: #fff;">Reset password</a>
+          <a href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}" class="activate-btn" style="color: #fff;">Activate Now</a>
         </div>
       </td>
     </tr>
@@ -60,13 +60,3 @@
 </div>
 </body>
 </html>
-
-
-
-Hi {{ user.first_name }},
-
-You can change your FoodOnline password by clicking below.
-
-http://{{ domain }}{% url 'reset_password_validate' uidb64=uid token=token %}
-
-{% endautoescape %}

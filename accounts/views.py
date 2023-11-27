@@ -110,7 +110,7 @@ def register_vendor(request):
 
             # Send verification mail
             mail_subject = 'Email Verification for FoodOnline'
-            email_template = 'accounts/email/account_verification_email.html'
+            email_template = 'accounts/email/vendor_account_verification_email.html'
             send_mail(request, user, mail_subject, email_template)
             messages.success(request, 'Your account has been registered successfully. Please verify the email to '
                                       'activate the account.')

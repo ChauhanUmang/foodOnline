@@ -1,4 +1,5 @@
 import simplejson as json
+from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from marketplace.context_processors import get_cart_amount
@@ -48,7 +49,7 @@ def place_order(request):
         for i in get_tax:
             tax_type = i.tax_type
             tax_percentage = i.tax_percentage
-            tax_amount = round((tax_percentage * subtotal)/100, 2)
+            tax_amount = round((tax_percentage * subtotal) / 100, 2)
             tax_dict.update({tax_type: {str(tax_percentage): str(tax_amount)}})
 
         # Construct total data
@@ -152,10 +153,20 @@ def payments(request):
         # send order confirmation email to the customer
         mail_subject = 'Thank you for ordering with us!'
         mail_template = 'orders/order_confirmation_email.html'
+
+        ordered_products_for_email = OrderedProduct.objects.filter(order=order)
+        customer_subtotal = 0
+        for item in ordered_products_for_email:
+            customer_subtotal += (item.price * item.quantity)
+        customer_tax_data = json.loads(order.tax_data)
         context = {
             'user': request.user,
             'order': order,
-            'to_email': order.email
+            'to_email': order.email,
+            'ordered_products_for_email': ordered_products_for_email,
+            'domain': get_current_site(request),
+            'customer_subtotal': customer_subtotal,
+            'customer_tax_data': customer_tax_data,
         }
 
         send_notification(mail_subject, mail_template, context)
@@ -169,11 +180,21 @@ def payments(request):
             if i.products.vendor.user.email not in to_emails:
                 to_emails.append(i.products.vendor.user.email)
 
-        context_vendor = {
-            'order': order,
-            'to_email': to_emails
-        }
-        send_notification(mail_subject_vendor, mail_template_vendor, context_vendor)
+                ordered_products_for_email_to_vendor = OrderedProduct.objects.filter(order=order,
+                                                                                     product__vendor=i.products.vendor)
+
+                vendor_subtotal_for_email = 0
+                for it in ordered_products_for_email_to_vendor:
+                    vendor_subtotal_for_email += (it.price * it.quantity)
+
+                context_vendor = {
+                    'order': order,
+                    'to_email': i.products.vendor.user.email,
+                    'ordered_products_for_email_to_vendor': ordered_products_for_email_to_vendor,
+                    'vendor_subtotal': vendor_subtotal_for_email,
+                    'vendor_tax_data': json.loads(order.tax_data),
+                }
+                send_notification(mail_subject_vendor, mail_template_vendor, context_vendor)
 
         # Clear the cart if the payment is success
         cart_items.delete()

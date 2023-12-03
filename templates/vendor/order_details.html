@@ -65,14 +65,14 @@
 
                                             <hr>
 
-                                            <table class="table table-borderless">
+                                            <table class="table table-borderless order_complete_items">
                                                 <tbody>
                                                 {% for item in ordered_product %}
                                                 <tr>
                                                     <td><img src="{{ item.product.image.url }}" width="60" alt="Product Image"></td>
                                                     <td>
                                                         <p class="mb-0"><b>{{ item.product }}</b></p>
-                                                        <a class="text-muted" href="{% url 'vendor_detail' item.product.vendor.vendor_slug %}">{{ item.product.vendor.vendor_name }}</a>
+                                                        <a class="badge bg-warning text-dark" href="{% url 'vendor_detail' item.product.vendor.vendor_slug %}">{{ item.product.vendor.vendor_name }}</a>
                                                     </td>
                                                     <td>{{ item.quantity }} QTY</td>
                                                     <td>${{ item.product.price }}</td>

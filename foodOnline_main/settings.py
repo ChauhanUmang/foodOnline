@@ -165,9 +165,9 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 
-# os.environ['PATH'] = os.path.join(BASE_DIR, 'venv\Lib\site-packages\osgeo') + ';' + os.environ['PATH']
-# os.environ['PROJ_LIB'] = os.path.join(BASE_DIR, 'venv\Lib\site-packages\osgeo\data\proj') + ';' + os.environ['PATH']
-# GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, 'venv\Lib\site-packages\osgeo\gdal.dll')
+os.environ['PATH'] = os.path.join(BASE_DIR, 'venv\Lib\site-packages\osgeo') + ';' + os.environ['PATH']
+os.environ['PROJ_LIB'] = os.path.join(BASE_DIR, 'venv\Lib\site-packages\osgeo\data\proj') + ';' + os.environ['PATH']
+GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, 'venv\Lib\site-packages\osgeo\gdal.dll')
 
 PAYPAL_CLIENT_ID = os.environ.get('PAYPAL_CLIENT_ID')
 
